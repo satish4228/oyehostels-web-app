@@ -16,7 +16,7 @@ public class OyeHostelsWebApplication {
 
 	public static void main(String[] args) {
 		ApplicationContext applicationContext= SpringApplication.run(OyeHostelsWebApplication.class, args);
-		System.out.println(applicationContext.getBean("userService", UserService.class).validateUser("sasas", "sasasasa"));
+		
 		
 	}
 
