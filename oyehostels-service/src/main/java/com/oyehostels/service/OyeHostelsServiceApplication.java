@@ -8,7 +8,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import com.oyehostels.service.entity.user.SystemUser;
 import com.oyehostels.service.repo.user.UserRepository;
+import com.oyehostels.service.solr.bo.HostelResultBo;
+import com.oyehostels.service.solr.service.HostelSearchService;
+import com.oyehostels.service.solr.service.HostelSearchServiceImpl;
 import com.oyehostels.service.user.UserService;
+import com.oyehostels.web.user.bo.AutoCompleteResultBo;
 
 @SpringBootApplication
 @EnableJpaRepositories(basePackageClasses = UserRepository.class)
@@ -16,8 +20,12 @@ import com.oyehostels.service.user.UserService;
 public class OyeHostelsServiceApplication {
 
 	public static void main(String[] args) {
+		
 		ApplicationContext applicationContext = SpringApplication.run(OyeHostelsServiceApplication.class, args);
-		System.out.println(applicationContext.getBean("userService", UserService.class).validateUser("sasasa", "dsdsds"));
+		HostelSearchService hostelSearchService = applicationContext.getBean("hostelSearchService", HostelSearchServiceImpl.class);
+		for (AutoCompleteResultBo bo : hostelSearchService.getSearchAutoComplete("Am")) {
+			System.out.println(bo);
+		}
 	}
 
 }
