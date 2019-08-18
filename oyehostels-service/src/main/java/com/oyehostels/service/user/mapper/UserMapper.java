@@ -2,8 +2,8 @@ package com.oyehostels.service.user.mapper;
 
 import org.springframework.stereotype.Component;
 
-import com.oyehostels.service.entity.user.SystemUser;
-import com.oyehostels.web.user.bo.SystemUserBo;
+import com.oyehostels.service.bo.user.SystemUserBo;
+import com.oyehostels.service.entities.SystemUser;
 
 @Component
 public class UserMapper {

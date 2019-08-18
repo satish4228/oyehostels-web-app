@@ -15,6 +15,7 @@ import com.oyehostels.service.user.UserService;
 public class OyeHostelsWebApplication {
 
 	public static void main(String[] args) {
+		
 		ApplicationContext applicationContext= SpringApplication.run(OyeHostelsWebApplication.class, args);
 		
 	}

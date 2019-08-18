@@ -14,15 +14,18 @@ import org.springframework.data.solr.core.SolrCallback;
 import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.stereotype.Service;
 
-import com.oyehostels.service.solr.bo.HostelResultBo;
+import com.oyehostels.service.bo.hostel.RatingValueNoOfReviewersBo;
+import com.oyehostels.service.bo.solr.HostelResultBo;
+import com.oyehostels.service.bo.user.AutoCompleteResultBo;
+import com.oyehostels.service.repo.UserRepository;
 import com.oyehostels.service.util.OyeHostelConstants;
-import com.oyehostels.web.user.bo.AutoCompleteResultBo;
 
 @Service("hostelSearchService")
 public class HostelSearchServiceImpl implements HostelSearchService{
 	
 	@Autowired
 	SolrTemplate solrTemplate;
+	
 	
 	final String citySFeild = "cityLatLon";
 	final String localitySFeild = "localityLatLon";
@@ -97,6 +100,44 @@ public class HostelSearchServiceImpl implements HostelSearchService{
 		return autoCompleteResultBos;
 	}
 	
+	
+	//method for retriving the hostel seaarch result
+	@Override
+	public List<HostelResultBo> getSearchHostels(String latLon, String gender,String searchBy) {
+		final SolrQuery solrQuery = new SolrQuery();
+		solrQuery.set("q", "*:*");
+		if(searchBy.equalsIgnoreCase("city")) {
+			solrQuery.set("sfield", "cityLatLon");
+			solrQuery.set("d", "60");
+		}else if(searchBy.equalsIgnoreCase("locality")) {
+			solrQuery.set("sfield", "localityLatLon");
+			solrQuery.set("d", "15");
+		}else if(searchBy.equalsIgnoreCase("hostel")) {
+			solrQuery.set("sfield", "addressLatLon");
+			solrQuery.set("d", "5");
+		}
+		solrQuery.set("pt", latLon);
+		solrQuery.set("fl", "*,dist:geodist()");
+		solrQuery.set("fq", "(hostelGender:" + gender + ")AND{!bbox}");
+		solrQuery.set("sort", "geodist() asc");
+		
+		List<HostelResultBo> hostelResultBos = solrTemplate.execute(new SolrCallback<List<HostelResultBo>>() {
+
+			@Override
+			public List<HostelResultBo> doInSolr(SolrClient solrClient) throws SolrServerException, IOException {
+				final QueryResponse queryResponse = solrClient.query(solrQuery);
+				final List<HostelResultBo> results = solrTemplate.convertQueryResponseToBeans(queryResponse,
+						HostelResultBo.class);
+				return results;
+			}
+			
+		});
+		
+		return hostelResultBos;
+	}
+	
+	
+	
 	//method for getting localityName as auto-complete
 	public List<HostelResultBo> getLocalityAutoComplete(String convertedSearchString){
 		final SolrQuery solrQuery = new SolrQuery();
@@ -119,6 +160,8 @@ public class HostelSearchServiceImpl implements HostelSearchService{
 		return autoCompleteCityResult;
 	}
 	
+
+
 	//method for getting the hostel-name as autocomplete
 	public List<HostelResultBo> getHostelAutoComplete(String convertedSearchString){
 		final SolrQuery solrQuery = new SolrQuery();
@@ -140,6 +183,9 @@ public class HostelSearchServiceImpl implements HostelSearchService{
 
 		return autoCompleteHostelResult;
 	}
+	
+	
+	
 	
 	
 	

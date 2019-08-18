@@ -5,11 +5,11 @@ import java.sql.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.oyehostels.service.bo.user.SystemUserBo;
 import com.oyehostels.service.constants.OyeConstants;
-import com.oyehostels.service.entity.user.SystemUser;
-import com.oyehostels.service.repo.user.UserRepository;
+import com.oyehostels.service.entities.SystemUser;
+import com.oyehostels.service.repo.UserRepository;
 import com.oyehostels.service.user.mapper.UserMapper;
-import com.oyehostels.web.user.bo.SystemUserBo;
 
 @Service("userService")
 public class UserServiceImpl implements UserService {

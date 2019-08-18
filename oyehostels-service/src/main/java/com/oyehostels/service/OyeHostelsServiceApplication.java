@@ -6,24 +6,27 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import com.oyehostels.service.entity.user.SystemUser;
-import com.oyehostels.service.repo.user.UserRepository;
-import com.oyehostels.service.solr.bo.HostelResultBo;
+import com.oyehostels.service.bo.solr.HostelResultBo;
+import com.oyehostels.service.entities.BedType;
+import com.oyehostels.service.entities.HostelRating;
+import com.oyehostels.service.entities.HostelRoomTypeInfo;
+import com.oyehostels.service.entities.RoomType;
+import com.oyehostels.service.entities.SystemUser;
+import com.oyehostels.service.repo.HostelRatingRepository;
+import com.oyehostels.service.repo.UserRepository;
 import com.oyehostels.service.solr.service.HostelSearchService;
 import com.oyehostels.service.solr.service.HostelSearchServiceImpl;
-import com.oyehostels.service.user.UserService;
-import com.oyehostels.web.user.bo.AutoCompleteResultBo;
 
 @SpringBootApplication
-@EnableJpaRepositories(basePackageClasses = UserRepository.class)
-@EntityScan(basePackageClasses = SystemUser.class)
+@EnableJpaRepositories(basePackageClasses = {UserRepository.class,HostelRatingRepository.class,HostelRatingRepository.class})
+@EntityScan(basePackageClasses = {SystemUser.class,HostelRating.class,HostelRoomTypeInfo.class,RoomType.class,BedType.class})
 public class OyeHostelsServiceApplication {
 
 	public static void main(String[] args) {
 		
 		ApplicationContext applicationContext = SpringApplication.run(OyeHostelsServiceApplication.class, args);
 		HostelSearchService hostelSearchService = applicationContext.getBean("hostelSearchService", HostelSearchServiceImpl.class);
-		for (AutoCompleteResultBo bo : hostelSearchService.getSearchAutoComplete("Am")) {
+		for (HostelResultBo bo : hostelSearchService.getSearchHostels("17.38500000,78.48670000", "Male", "city")) {
 			System.out.println(bo);
 		}
 	}
